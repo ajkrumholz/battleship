@@ -4,6 +4,7 @@ require 'pry'
 
 RSpec.describe Cell do
   let(:cell_1) {described_class.new("B4")}
+  let(:cell_2) {described_class.new("C3")}
   let(:cruiser) {Ship.new("Cruiser", 3)}
 
   it '1. exists' do
@@ -53,4 +54,18 @@ RSpec.describe Cell do
 
     expect(cell_1.render).to eq("M")
   end
+
+  it '10. place ship and render "."' do
+    cell_2.place_ship(cruiser)
+
+    expect(cell_2.render).to eq(".")
+  end
+
+  it '11. can reveal hidden ships' do
+    cell_2.place_ship(cruiser)
+
+    expect(cell_2.render(true)).to eq("S")
+  end
+
+
 end

@@ -25,12 +25,18 @@ class Cell
     @fired_upon
   end
 
-  def render
-    if @ship == nil
-      if @fired_upon == false
-        "."
+  def render(state = false)
+    if @fired_upon == false
+      if state == true && ship != nil
+        "S"
       else
+        "."      
+      end
+    elsif @fired_upon == true
+      if @ship == nil
         "M"
+      else
+        "H"
       end
     end
   end
