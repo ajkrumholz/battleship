@@ -1,8 +1,10 @@
 require './lib/ship'
 require './lib/cell'
+require 'pry'
 
 RSpec.describe Cell do
   let(:cell) {described_class.new("B4")}
+  let(:cruiser) {Ship.new("Cruiser", 3)}
 
   it '1. exists' do
     expect(cell).to be_instance_of(described_class)
@@ -18,5 +20,13 @@ RSpec.describe Cell do
 
   it '4. is empty by default' do
     expect(cell.empty?).to eq(true)
+  end
+
+  it '5. ship can be placed' do
+    cell.place_ship(cruiser)
+
+    expect(cell.ship).to be_instance_of(Ship)
+    expect(cell.ship).to eq(cruiser)
+    expect(cell.empty?).to eq(false)
   end
 end
