@@ -1,4 +1,4 @@
-
+require 'pry'
 
 class Cell
   attr_reader :coordinate, :ship, :fired_upon
@@ -17,11 +17,25 @@ class Cell
   end
 
   def fire_upon
-    @ship.hit
+    @ship.hit if @ship != nil
     @fired_upon = true
   end
 
   def fired_upon?
     @fired_upon
   end
+
+  def render
+    if @ship == nil
+      if @fired_upon == false
+        "."
+      else
+        "M"
+      end
+    end
+  end
+
+
+
+  
 end
