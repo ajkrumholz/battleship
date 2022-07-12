@@ -27,7 +27,7 @@ class Cell
 
   def render(state = false)
     if @fired_upon == false
-      if state == true && ship != nil
+      if state == true && @ship != nil
         "S"
       else
         "."      
@@ -36,7 +36,11 @@ class Cell
       if @ship == nil
         "M"
       else
-        "H"
+        if @ship.health == 0
+          "X"
+        else
+          "H"
+        end
       end
     end
   end

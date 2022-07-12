@@ -67,5 +67,17 @@ RSpec.describe Cell do
     expect(cell_2.render(true)).to eq("S")
   end
 
+  it '12. can render hits and sinkings' do 
+    cell_2.place_ship(cruiser)
+    cell_2.fire_upon
+
+    expect(cell_2.render).to eq("H")
+    expect(cruiser.sunk?).to eq(false)
+    
+    cruiser.hit
+    cruiser.hit
+    expect(cell_2.render).to eq("X")
+    expect(cruiser.sunk?).to eq(true)
+  end
 
 end
