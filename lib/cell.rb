@@ -43,6 +43,11 @@ class Cell
         end
       end
     end
+      # return "H" if @fired_upon == true && empty? == false
+      # return "X" if @fired_upon == true && @ship.health == 0
+      # return "M" if @fired_upon == true && cell.empty?
+      # return "S" if @fired_upon == false && state == true
+      # return "."
   end
 
 
