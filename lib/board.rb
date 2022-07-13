@@ -20,11 +20,15 @@ class Board
           cell = Cell.new("#{letter}#{number}")
           cell_hash[cell.coordinate] = cell
         end
-    end
+      end
     return cell_hash
   end
 
   def valid_coordinate?(coordinate)
     cells.has_key?(coordinate)
+  end
+
+  def valid_placement?(ship, placement_coords)
+    placement_coords.count == ship.length && placement_coords.sort == placement_coords
   end
 end
