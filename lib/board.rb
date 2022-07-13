@@ -23,4 +23,8 @@ class Board
     end
     return cell_hash
   end
+
+  def valid_coordinate?(coordinate)
+    cells.has_key?(coordinate)
+  end
 end
