@@ -10,6 +10,7 @@ RSpec.describe Board do
 
   it '2. hash has cell instances and size' do
     expect(board.cells.size).to eq(16)
-    # expect(board.cells.values[0]).to be_instance_of(Cell)
+    expect(board.cells.values[0]).to be_instance_of(Cell)
+    binding.pry
   end
 end

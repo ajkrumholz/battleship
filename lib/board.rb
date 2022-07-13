@@ -13,11 +13,14 @@ class Board
   end
 
   def cells
-    coord_arr = @letters.map do |letter|
+    cell_hash = {}
+    coord_arr = @letters.flat_map do |letter|
       letter = (letter + 64).chr
-        @numbers.map do |number|
-          "#{letter}#{number}"
+        @numbers.flat_map do |number|
+          cell = Cell.new("#{letter}#{number}")
+          cell_hash[cell.coordinate] = cell
         end
-    end.flatten
+    end
+    return cell_hash
   end
 end
