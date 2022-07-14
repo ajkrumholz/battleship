@@ -27,6 +27,8 @@ RSpec.describe Board do
   it '4. validates ship placements with length' do
     expect(board.valid_placement?(cruiser, ["A1", "A2"])).to eq(false)
     expect(board.valid_placement?(submarine, ["A2", "A3", "A4"])).to eq(false)
+    expect(board.valid_placement_length?(cruiser, ["B2", "B3", "B4"])).to eq(true)
+    expect(board.valid_placement_length?(submarine, ["C1", "C2"])).to eq(true)
   end
 
   it '5. validates placement coordinates are consecutive' do
