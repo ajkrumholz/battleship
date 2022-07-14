@@ -29,10 +29,9 @@ class Board
   end
 
   def valid_placement?(ship, placement_coords)
-    overlapping = placement_coords.any? do |coordinate| 
-
+    overlapping = placement_coords.all? do |coordinate| 
       cells[coordinate].ship != nil
-    end
+    end     
     valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords) && overlapping
   end
 
