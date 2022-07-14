@@ -29,6 +29,37 @@ class Board
   end
 
   def valid_placement?(ship, placement_coords)
-    placement_coords.count == ship.length && placement_coords.sort == placement_coords
+    valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords) && valid_orientation?(placement_coords)
   end
+
+  def valid_placement_length?(ship, placement_coords)
+    placement_coords.uniq.count == ship.length
+  end
+
+  def consecutive_coords?(placement_coords)
+    placement_coords.sort == placement_coords
+    letters = []
+    numbers = []
+    placement_coords.each do |coord|
+      letters << coord.split('')[0]
+      numbers << coord.split('')[1]
+    end
+    if letters.uniq.count == 1 && numbers.uniq.count != 1
+      numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
+    elsif numbers.uniq.count == 1 && letters.uniq.count != 1
+      letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
+    end
+  end
+
+  def valid_orientation?(placement_coords)
+    letters = []
+    numbers = []
+    placement_coords.each do |coord|
+      letters << coord.split('')[0]
+      numbers << coord.split('')[1]
+    end
+    letters.uniq.count == 1 || numbers.uniq.count == 1
+  end
+
+
 end
