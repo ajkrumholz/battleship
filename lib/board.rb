@@ -29,7 +29,7 @@ class Board
   end
 
   def valid_placement?(ship, placement_coords)
-    valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords) #&& valid_orientation?(placement_coords)
+    valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords)
   end
 
   def valid_placement_length?(ship, placement_coords)
@@ -51,15 +51,9 @@ class Board
     end
   end
 
-  # def valid_orientation?(placement_coords)
-  #   letters = []
-  #   numbers = []
-  #   placement_coords.each do |coord|
-  #     letters << coord.split('')[0]
-  #     numbers << coord.split('')[1]
-  #   end
-  #   letters.uniq.count == 1 || numbers.uniq.count == 1
-  # end
-
-
+  def place(ship, coordinates)
+    coordinates.each do |coordinate|
+      coordinate.place_ship(ship)
+    end
+  end
 end
