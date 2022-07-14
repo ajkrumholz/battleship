@@ -59,4 +59,26 @@ class Board
       coordinate.place_ship(ship)
     end
   end
+
+  def render
+    # require 'pry'; binding.pry
+    letters = []
+    numbers = []
+    cells.keys.each do |coord|
+      letters << coord.split('')[0]
+      numbers << coord.split('')[1]
+    end
+    header = "  #{numbers.uniq.join(' ')} \n"
+    board_display = []
+    letters.uniq.each do |letter|
+      board_display << "#{letter} "
+      cells.values.each do |cell|
+        if cell.coordinate[0] == letter
+          board_display << "#{cell.render} "
+        end
+      end
+      board_display << "\n"   
+    end
+    "#{header}" + board_display.join
+  end
 end
