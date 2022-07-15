@@ -1,6 +1,6 @@
-# require './lib/board'
-# require './lib/cell'
-# require './lib/ship'
+require './lib/board'
+require './lib/cell'
+require './lib/ship'
 require './lib/game'
 require './lib/computer'
 require 'pry'
@@ -14,7 +14,9 @@ RSpec.describe Computer do
 
 
   it '' do
-    computer.comp_ship_place
+    computer.place_submarine
+    computer.place_cruiser
+
   end
 
 end
