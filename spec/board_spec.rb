@@ -64,11 +64,11 @@ RSpec.describe Board do
   end
 
   it '8. renders a board' do
-    # cell_1 = board.cells["A1"]  
-    # cell_2 = board.cells["A2"]  
-    # cell_3 = board.cells["A3"]  
-    # board.place(cruiser, ["A1", "A2", "A3"])
-# print board.render
+    cell_1 = board.cells["A1"]
+    cell_2 = board.cells["A2"]
+    cell_3 = board.cells["A3"]
+    board.place(cruiser, ["A1", "A2", "A3"])
+
     expect(board.render).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
     expect(board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
   end
