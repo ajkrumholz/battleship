@@ -39,10 +39,11 @@ RSpec.describe Board do
   end
 
   it '6. can place ships in cells' do
-    cell_1 = board.cells["A1"]  
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    cell_1 = board.cells["A2"]  
     cell_2 = board.cells["A2"]  
-    cell_3 = board.cells["A3"]  
-    board.place(cruiser, [cell_1, cell_2, cell_3]) 
+    cell_3 = board.cells["A3"]
 
     expect(cell_1.ship).to eq(cruiser)
     expect(cell_2.ship).to eq(cruiser)
@@ -51,15 +52,23 @@ RSpec.describe Board do
   end
 
   it '7. checks for overlapping ships' do
-    cell_1 = board.cells["A1"]  
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    cell_1 = board.cells["A2"]  
     cell_2 = board.cells["A2"]  
-    cell_3 = board.cells["A3"]  
-    board.place(cruiser, [cell_1, cell_2, cell_3])
+    cell_3 = board.cells["A3"]
     
     expect(board.valid_placement?(submarine, ["A1", "B1"])).to eq(false)
   end
 
   it '8. renders a board' do
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    cell_1 = board.cells["A2"]  
+    cell_2 = board.cells["A2"]  
+    cell_3 = board.cells["A3"]
+
     expect(board.render).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+    expect(board.render).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
   end
 end

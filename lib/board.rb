@@ -5,7 +5,11 @@ class Board
   attr_reader :numbers, :letters
 
   def initialize
-    # @cells = {}
+    @cells = {"A1" => Cell.new("A1"), "A2" => Cell.new("A2"), "A3" => Cell.new("A3"), "A4" => Cell.new("A4"),
+      "B1" => Cell.new("B1"), "B2" => Cell.new("B2"), "B3" => Cell.new("B3"), "B4" => Cell.new("B4"),
+      "C1" => Cell.new("C1"), "C2" => Cell.new("C2"), "C3" => Cell.new("C3"), "C4" => Cell.new("C4"),
+      "D1" => Cell.new("D1"), "D2" => Cell.new("D2"), "D3" => Cell.new("D3"), "D4" => Cell.new("D4")
+    }
     @size_x = 4
     @size_y = 4
     @numbers = (1..@size_x).to_a
@@ -13,15 +17,15 @@ class Board
   end
 
   def cells
-    cell_hash = {}
-    coord_arr = @letters.flat_map do |letter|
-      letter = (letter + 64).chr
-        @numbers.flat_map do |number|
-          cell = Cell.new("#{letter}#{number}")
-          cell_hash[cell.coordinate] = cell
-        end
-      end
-    return cell_hash
+    @cells #_hash = {}
+    # coord_arr = @letters.flat_map do |letter|
+    #   letter = (letter + 64).chr
+    #     @numbers.flat_map do |number|
+    #       cell = Cell.new("#{letter}#{number}")
+    #       cell_hash[cell.coordinate] = cell
+    #     end
+    #   end
+    # return cell_hash
   end
 
   def valid_coordinate?(coordinate)
@@ -30,9 +34,9 @@ class Board
 
   def valid_placement?(ship, placement_coords)
     overlapping = placement_coords.any? do |coordinate| 
-      cells[coordinate].ship != nil
+      cells[coordinate].ship == nil
     end     
-    valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords) && overlapping
+    valid_placement_length?(ship, placement_coords) && consecutive_coords?(placement_coords) && !overlapping
   end
 
   def valid_placement_length?(ship, placement_coords)
@@ -56,11 +60,11 @@ class Board
 
   def place(ship, coordinates)
     coordinates.each do |coordinate|
-      coordinate.place_ship(ship)
+      @cells[coordinate].place_ship(ship)
     end
   end
 
-  def render
+  def render(state = false)
     # require 'pry'; binding.pry
     letters = []
     numbers = []
