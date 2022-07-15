@@ -21,7 +21,7 @@ class Board
           cell_hash[cell.coordinate] = cell
         end
       end
-    return cell_hash
+    cell_hash
   end
 
   def valid_coordinate?(coordinate)
@@ -40,7 +40,7 @@ class Board
   end
 
   def consecutive_coords?(placement_coords)
-    placement_coords.sort == placement_coords
+    # placement_coords.sort == placement_coords
     letters = []
     numbers = []
     placement_coords.each do |coord|
@@ -54,14 +54,14 @@ class Board
     end
   end
 
-  def place(ship, coordinates)
-    coordinates.each do |coordinate|
-      coordinate.place_ship(ship)
+  def place(ship, cell_array)
+    cell_array.each do |cell|
+      cell.place_ship(ship)
+      cells[cell.coordinate] = cell
     end
   end
 
-  def render
-    # require 'pry'; binding.pry
+  def render(state = false)
     letters = []
     numbers = []
     cells.keys.each do |coord|
@@ -74,7 +74,11 @@ class Board
       board_display << "#{letter} "
       cells.values.each do |cell|
         if cell.coordinate[0] == letter
+          if state == false
           board_display << "#{cell.render} "
+          elsif state == true
+          board_display << "#{cell.render(true)} "
+          end
         end
       end
       board_display << "\n"   
