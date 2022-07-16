@@ -44,17 +44,28 @@ class Game
     print @computer.board.render
     print "=============PLAYER BOARD=============\n"
     print @player.board.render(true) + "\n"
-    
+  end
+
+  def player_fire_feedback(shot)
+    case @computer.board.cells[shot].render
+    when "M"
+      "Negative contact! We can't see them!\n"
+    when "H"
+      "Contact! We're picking up distress signals!\n"
+    when "X"
+      "Contact! Target sensors have gone dark! That's a kill.\n"
+    end
   end
 
   def player_fire
-    print "Enter a coordinate to fire: "
+    print "\nEnter a coordinate to fire: \n"
     shot = gets.chomp.upcase
     if @computer.board.valid_coordinate?(shot) == true
       @computer.board.cells[shot].fire_upon
-    else print "No viable firing solution on this location. Try again!\n"
+    else print "\nNo viable firing solution on this location. Try again!\n"
       player_fire
     end      
+    print player_fire_feedback(shot)
   end
   
   def computer_fire
