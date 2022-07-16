@@ -6,42 +6,102 @@ require './lib/computer'
 require 'pry'
 
 class Game
-  attr_reader :computer, :player
-
+  attr_reader :computer, 
+              :player,
+              :difficulty
+  attr_accessor :columns,
+                :rows
   def initialize
+    @columns = columns
+    @rows = rows
     @computer = Computer.new
     @player = Player.new
+    @difficulty = 1
+  end
+
+  def print_slow(string)
+    string.split(//).each do |character|
+      sleep 0.007
+      print character
+    end
+  end
+
+  def print_very_slow(string)
+    string.split(//).each do |character|
+      sleep 0.04
+      print character
+    end
   end
 
   def intro
-    print "\n\n\nWelcome to BATTLESHIP, Freedom Fighter\n\n\n"
+    print "\n" * 50
+    print " " * 18 + "-" * 2 + "\n"
+    print " " * 16 + "-" * 6 + "\n"
+    print " " * 13 + "-" * 12 + "\n"
+    print " " * 10 + "-" * 18 + "\n"
+    print " " * 7 + "-" * 24 + "\n"
+    print " " * 4 + "-" * 30 + "\n"
+    print " " + "-" * 36
+    print_very_slow(("\nWelcome to BATTLESHIP, Freedom Fighter\n"))
+    print " " + "-" * 36 + "\n"
+    print " " * 4 + "-" * 30 + "\n"
+    print " " * 7 + "-" * 24 + "\n"
+    print " " * 10 + "-" * 18 + "\n"
+    print " " * 13 + "-" * 12 + "\n"
+    print " " * 16 + "-" * 6 + "\n"
+    print " " * 18 + "-" * 2 + "\n"
+    print_very_slow(("\n" * 5))
     run_game
   end
 
   def menu
-    print "\nEnter p to play. Enter q to quit. "
+    print_very_slow("\nEnter p to play. Enter q to quit. ")
     answer = gets.chomp.downcase
     if answer == 'p'
+      print "\n Please select difficulty (1. Easy, 2. Hard): "
+      answer = gets.chomp.to_i
+      if answer > 0 && answer < 3
+        @difficulty = answer
+      else
+        print "Invalid input, please try again."
+        menu
+      end
+      print "\nPlease select board width (between 4 and 10 cells): "
+      @columns = gets.chomp.to_i
+        if @columns < 4 || @columns > 10
+          print "Invalid width, please try again."
+          menu
+        end
+      print "\nPlease select board height (between 4 and 10 cells): "
+      @rows = gets.chomp.to_i
+        if @rows < 4 || @rows > 10
+          print "\nInvalid height, please try again.\n"
+          menu
+        end
+      @player.board = Board.new(@columns, @rows)
+      @player.board.build_board
+      @computer.board = Board.new(@columns, @rows)
+      @computer.board.build_board
       start
     elsif answer == 'q'
       exit!
     else
-      puts "\nInvalid input, please try again\n\n"
-      self.menu
+      puts "\nInvalid input, please try again\n"
+      menu
     end
   end
 
   def start
-    print "\n\nI have laid out my ships on the grid.\n" +
-    "You now need to lay out your two ships.\n" +
-    "The Cruiser is three units long and the Submarine is two units long.\n\n"
+    print_very_slow("\nI have laid out my ships on the grid.\n" +
+    "\nYou now need to lay out your two ships.\n" +
+    "\nThe Cruiser is three units long and the Submarine is two units long.\n\n")
   end
 
   def render_boards
-    print "\n=============COMPUTER BOARD=============\n"
-    print @computer.board.render
+    print "=============COMPUTER BOARD=============\n"
+    print@computer.board.render
     print "=============PLAYER BOARD=============\n"
-    print @player.board.render(true) + "\n"
+    print@player.board.render(true) + "\n"
   end
 
   def player_fire_feedback(shot)
@@ -51,18 +111,19 @@ class Game
     when "H"
       "Contact! We're picking up distress signals!\n"
     when "X"
-      "Contact! Target sensors have gone dark! That's a kill.\n"
+      "Contact! Target sensors have gone dark! That's a kill\n"
     end
   end
 
   def player_fire
-    print "\nEnter a coordinate to fire: \n"
+    print "\nEnter a coordinate to fire: "
     shot = gets.chomp.upcase
+    print "\n"
     if @computer.board.valid_coordinate?(shot) == true
       if @player_shot_selection.include?(shot) != true
         @computer.board.cells[shot].fire_upon
         @player_shot_selection << shot
-        print player_fire_feedback(shot) + "\n"
+        print_very_slow(player_fire_feedback(shot) + "\n")
       else
         print "We've already fired on this coordinate. Choose another.\n"
         player_fire
@@ -86,7 +147,43 @@ class Game
   def computer_fire
     shot = @computer_shot_selection.shuffle!.shift
     @player.board.cells[shot].fire_upon 
-    print computer_fire_feedback(shot) + "\n"
+    print_very_slow(computer_fire_feedback(shot) + "\n")
+  end
+  
+  def computer_fire_hard
+    if @computer.hunting == false
+      shot = @computer_shot_selection.shuffle!.shift
+      @player.board.cells[shot].fire_upon 
+      print_very_slow(computer_fire_feedback(shot) + "\n")
+      if @player.board.cells[shot].render == "H"
+        @computer.recent_hit = shot
+        @computer.hunting = true
+      end
+    elsif @computer.hunting == true
+      shot = @computer.recent_hit
+      intelligent_shot = []
+      intelligent_shot << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
+      intelligent_shot << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
+      intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
+      intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
+      intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
+      shot = intelligent_shot.shuffle!.shift
+      require 'pry'; binding.pry
+      @player.board.cells[shot].fire_upon
+      print_very_slow(computer_fire_feedback(shot) + "\n")
+      @computer_shot_selection.delete(shot)
+      case @player.board.cells[shot].render
+        when "H"
+        @computer.recent_hit = shot
+        @computer.hunting = true
+        when "X"
+        @computer.recent_hit = nil
+        @computer.hunting = false
+        when "M"
+        @computer.recent_hit = nil
+        @computer.hunting = false
+      end
+    end
   end
 
   def run_game
@@ -101,10 +198,14 @@ class Game
       render_boards
       print "Captain, we have an open shot!\n"
       player_fire
-      if player_wins?
+      if self.player_wins? == true
         end_game
       end
-      computer_fire
+      if @difficulty == 1
+        computer_fire
+      else
+        computer_fire_hard
+      end
     end
     end_game
   end
@@ -119,12 +220,14 @@ class Game
 
   def end_game
     if player_wins?
+      render_boards
       print "We have ended the Cold War!! \n\n\n\n"
     else
+      render_boards
       print "The Iron Curtain has overcome! \n\n\n\n"
     end
-    @player.board = Board.new
-    @computer.board = Board.new
+    @player = Player.new
+    @computer = Computer.new
     run_game
   end
 end

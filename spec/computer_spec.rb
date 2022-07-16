@@ -6,17 +6,25 @@ require './lib/computer'
 require 'pry'
 
 RSpec.describe Computer do
-  let(:computer) {described_class.new}
-  # let(:board) {Board.new}
-  # let(:cruiser) {Ship.new("Cruiser", 3)}
-  # let(:sub) {Ship.new("Submarine", 2)}
   let(:game) {Game.new}
+  let(:computer) {described_class.new}
+  let(:player) {Player.new}
 
 
-  it '' do
-    computer.place_submarine
-    computer.place_cruiser
-
+  it 'exists' do
+    expect(computer).to be_instance_of(described_class)
   end
 
+  it 'has ships by default' do
+    expect(computer.cruiser.name).to eq("Cruiser")
+    expect(computer.submarine.name).to eq("Submarine")
+  end
+  
+  it 'places ships at random' do
+    computer.board.build_board
+    computer.place_cruiser
+    computer.place_submarine
+
+    expect(computer.board.cells.values.any? { |cell| cell.ship != nil}).to eq(true)
+  end
 end

@@ -40,17 +40,4 @@ class Player
         player_submarine
     end
   end
-
-
-      # ship.length.times do
-      #   coordinates << @board.cells.keys.sample
-      #   coordinates.sort!
-      
-
-    # @ships.each do |ship|
-    #   print "Enter the squares for the #{ship.name} (#{ship.length} spaces): "
-    #   coordinates = gets.chomp.split(" ")
-    #   if @board.valid_placement?(ship,coordinates) == true
-    #     @board.place_cruiser(ship, coordinates)
-      # else
 end
