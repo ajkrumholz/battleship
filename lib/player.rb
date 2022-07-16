@@ -17,8 +17,9 @@ class Player
 
   def player_cruiser
     print @board.render(true)
-    print "Enter the squares for the Cruiser (3 spaces): "
+    print "\nEnter the squares for the Cruiser (3 spaces): "
     coordinates = gets.chomp.upcase.split(" ").sort
+    print "\n"
     if @board.valid_placement?(@cruiser, coordinates) == true
       @board.place(@cruiser, coordinates)
       else
@@ -29,8 +30,9 @@ class Player
 
   def player_submarine
     print @board.render(true)
-    print "Enter the squares for the Submarine (2 spaces): "
+    print "\nEnter the squares for the Submarine (2 spaces): "
     coordinates = gets.chomp.upcase.split(" ").sort
+    print "\n"
     if @board.valid_placement?(@submarine, coordinates) == true
       @board.place(@submarine, coordinates)
       else
