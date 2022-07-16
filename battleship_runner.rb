@@ -9,7 +9,7 @@ require_relative 'lib/game'
 game = Game.new
 # computer = Computer.new
 
-game.run_game
+game.intro
 # game.menu
 
 # game.computer.place_submarine
