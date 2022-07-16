@@ -113,7 +113,7 @@ class Game
       render_boards
       print "Captain, we have an open shot!\n"
       player_fire
-      if player_wins?
+      if self.player_wins? == true
         end_game
       end
       computer_fire
@@ -135,8 +135,8 @@ class Game
     else
       print "The Iron Curtain has overcome! \n\n\n\n"
     end
-    @player.board = Board.new
-    @computer.board = Board.new
+    @player = Player.new
+    @computer = Computer.new
     run_game
   end
 end
