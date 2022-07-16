@@ -6,9 +6,13 @@ require './lib/computer'
 require 'pry'
 
 class Game
-  attr_reader :computer, :player
-
+  attr_reader :computer, 
+              :player
+  attr_accessor :columns,
+                :rows
   def initialize
+    @columns = columns
+    @rows = rows
     @computer = Computer.new
     @player = Player.new
   end
@@ -22,6 +26,13 @@ class Game
     print "\nEnter p to play. Enter q to quit. "
     answer = gets.chomp.downcase
     if answer == 'p'
+      print "\nSelect board width: "
+      @columns = gets.chomp.to_i
+      print "\nSelect board height: "
+      @rows = gets.chomp.to_i
+      require 'pry'; binding.pry
+      @player.board = Board.new(@columns, @rows)
+      @computer.board = Board.new(@columns, @rows)
       start
     elsif answer == 'q'
       exit!

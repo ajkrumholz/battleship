@@ -8,7 +8,7 @@ class Computer
   attr_accessor :board, :cruiser, :submarine
 
   def initialize
-    @board = Board.new
+    @board = Board.new(4, 4)
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
   end
