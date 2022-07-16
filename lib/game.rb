@@ -50,8 +50,9 @@ class Game
   end
   
   def computer_fire
-    shot = @player.board.cells.keys.sample
+    shot = @computer_shot_selection.shuffle!.shift
     @player.board.cells[shot].fire_upon 
+require 'pry'; binding.pry
     print "\nThey have fired back!\n"
 
     # need to remove fire_upon cells from array
@@ -64,6 +65,7 @@ class Game
 
   def run_game
     menu
+    @computer_shot_selection = @player.board.cells.keys
     @computer.place_submarine
     @computer.place_cruiser
     @player.player_cruiser
