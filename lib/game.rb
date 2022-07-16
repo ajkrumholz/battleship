@@ -18,8 +18,6 @@ class Game
     run_game
   end
 
-
-
   def menu
     print "\nEnter p to play. Enter q to quit. "
     answer = gets.chomp.downcase
@@ -62,16 +60,27 @@ class Game
     shot = gets.chomp.upcase
     if @computer.board.valid_coordinate?(shot) == true
       @computer.board.cells[shot].fire_upon
+      print player_fire_feedback(shot) + "\n"
     else print "\nNo viable firing solution on this location. Try again!\n"
       player_fire
     end      
-    print player_fire_feedback(shot)
   end
-  
+
+  def computer_fire_feedback(shot)
+    case @player.board.cells[shot].render
+    when "M"
+      "They've fired back! It's a miss!\n"
+    when "H"
+      "We're hit. We're taking on water!\n"
+    when "X"
+      "We've lost the ship!\n"
+    end
+  end
+
   def computer_fire
     shot = @computer_shot_selection.shuffle!.shift
     @player.board.cells[shot].fire_upon 
-    print "\nThey have fired back!\n"
+    print computer_fire_feedback(shot) + "\n"
   end
 
   def run_game
@@ -83,8 +92,11 @@ class Game
     @player.player_submarine
     until computer_wins? || player_wins?
       render_boards
-      print "Captain, we have an open shot!\n\n"
+      print "Captain, we have an open shot!\n"
       player_fire
+      if player_wins?
+        end_game
+      end
       computer_fire
     end
     end_game
@@ -104,6 +116,8 @@ class Game
     else
       print "The Iron Curtain has overcome! \n\n\n\n"
     end
+    @player.board = Board.new
+    @computer.board = Board.new
     run_game
   end
 end
