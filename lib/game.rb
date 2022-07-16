@@ -1,6 +1,7 @@
 require './lib/board'
 require './lib/cell'
 require './lib/ship'
+require './lib/player'
 require 'pry'
 
 class Game
@@ -32,5 +33,11 @@ class Game
     The Cruiser is three units long and the Submarine is two units long."
     # render board for user to input ship 1
   end
+
+  def cruiser_input
+    print "Enter the squares for the Cruiser (3 spaces): "
+    coordinates = gets.chomp.split(" ")
+  end
+    
 
 end
