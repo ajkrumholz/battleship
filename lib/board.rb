@@ -50,9 +50,9 @@ class Board
     coordinates.uniq.count == ship.length
   end
 
-  def consecutive_coordinates?(coordinates)
-    consecutive_letters(coordinates) && consecutive_numbers(coordinates)
-  end
+  # def consecutive_coordinates?(coordinates)
+  #   consecutive_letters(coordinates) && consecutive_numbers(coordinates)
+  # end
     # # placement_coords.sort == placement_coords
     # letters = []
     # numbers = []
@@ -61,23 +61,32 @@ class Board
     #   numbers << coordinate.split('')[1]
     # end
 
-  def consecutive_letters(coordinates)
+  def consecutive_coordinates(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
+    numbers = coordinates.map { |coordinate| coordinate.split('')[1] }
     if letters.uniq.count != 1
       letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
+    elsif numbers.uniq.count != 1
+      numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
     else
-      true
+      false
     end
   end
 
-  def consecutive_numbers(coordinates)
-    numbers = coordinates.map { |coordinate| coordinate.split('')[1]}
-    if numbers.uniq.count != 1
-      numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
-    else
-      true
+  def overlapping(coordinates)
+    coordinates.all? do |coordinate|
+      cells[coordinate].ship == nil
     end
   end
+
+  # def consecutive_numbers(coordinates)
+  #   numbers = coordinates.map { |coordinate| coordinate.split('')[1]}
+  #   if numbers.uniq.count != 1
+  #     numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
+  #   else
+  #     true
+  #   end
+  # end
     # if letters.uniq.count == 1 && numbers.uniq.count != 1
     #   numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
 
@@ -85,11 +94,7 @@ class Board
     #   letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
     # end
     
-  def overlapping(coordinates)
-    coordinates.all? do |coordinate|
-      cells[coordinate].ship == nil
-    end
-  end  
+
 
   def render(state = false)
     render_array = (cells.values.map { |cell| cell.render(state) }).each_slice(4).to_a
