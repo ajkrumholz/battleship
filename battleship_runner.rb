@@ -7,10 +7,8 @@ require_relative 'lib/game'
 # require 'pry'
 
 game = Game.new
-# computer = Computer.new
-
 game.intro
-# game.menu
+game.menu
 
 # game.computer.place_submarine
 # game.computer.place_cruiser

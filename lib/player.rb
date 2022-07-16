@@ -23,7 +23,7 @@ class Player
     if @board.valid_placement?(@cruiser, coordinates) == true
       @board.place(@cruiser, coordinates)
       else
-        print "That strategy is not ideal. Please try again.\n"
+        print "That strategy is not ideal. Please try again.\n\n"
         player_cruiser
     end
   end
@@ -36,7 +36,7 @@ class Player
     if @board.valid_placement?(@submarine, coordinates) == true
       @board.place(@submarine, coordinates)
       else
-        print "That strategy is not ideal. Please try again.\n"
+        print "That strategy is not ideal. Please try again.\n\n"
         player_submarine
     end
   end
