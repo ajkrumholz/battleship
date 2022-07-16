@@ -5,12 +5,12 @@ require './lib/game'
 require 'pry'
 
 class Computer
-  attr_accessor :board
+  attr_accessor :board, :cruiser, :submarine
 
   def initialize
     @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
-    @sub = Ship.new("Submarine", 2)
+    @submarine = Ship.new("Submarine", 2)
   end
 
   def ship_place(ship)
@@ -33,8 +33,8 @@ class Computer
   end
 
   def place_submarine
-    coordinates = ship_place(@sub)
-    @board.place(@sub, coordinates)
+    coordinates = ship_place(@submarine)
+    @board.place(@submarine, coordinates)
 
   end
 
