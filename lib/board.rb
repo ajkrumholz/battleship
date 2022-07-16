@@ -61,15 +61,15 @@ class Board
     #   numbers << coordinate.split('')[1]
     # end
 
-  def consecutive_coordinates(coordinates)
+  def consecutive_coordinates?(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
     numbers = coordinates.map { |coordinate| coordinate.split('')[1] }
-    if letters.uniq.count != 1
+    if letters.uniq.count == numbers.uniq.count
+      return false
+    elsif letters.uniq.count != 1
       letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
     elsif numbers.uniq.count != 1
       numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
-    else
-      false
     end
   end
 
