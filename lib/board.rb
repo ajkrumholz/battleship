@@ -43,7 +43,7 @@ class Board
   end
   
   def valid_placement?(ship, coordinates)
-    valid_placement_length?(ship, coordinates) && consecutive_coordinates?(coordinates) && overlapping(coordinates)
+    valid_placement_length?(ship, coordinates) && consecutive_coordinates?(coordinates) && overlapping?(coordinates) && not_diagonal(coordinates)
   end
 
   def valid_placement_length?(ship, coordinates)
@@ -64,21 +64,31 @@ class Board
   def consecutive_coordinates?(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
     numbers = coordinates.map { |coordinate| coordinate.split('')[1] }
-    if letters.uniq.count == numbers.uniq.count
-      return false
-    elsif letters.uniq.count != 1
+    if letters.uniq.count == coordinates.count
       letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
-    elsif numbers.uniq.count != 1
+    elsif numbers.uniq.count == coordinates.count
       numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
     end
   end
 
-  def overlapping(coordinates)
+  def overlapping?(coordinates)
     coordinates.all? do |coordinate|
-      cells[coordinate].ship == nil
+      valid_coordinate?(coordinate) && @cells[coordinate].ship == nil
     end
   end
 
+  def not_diagonal(coordinates)
+    letters = coordinates.map { |coordinate| coordinate.split('')[0] }
+    numbers = coordinates.map { |coordinate| coordinate.split('')[1] }
+    if letters.uniq.count == 1 && numbers.uniq.count == coordinates.count
+      true
+    elsif numbers.uniq.count == 1 && letters.uniq.count == coordinates.count
+      true
+    else
+      false
+    end
+  end
+  
   # def consecutive_numbers(coordinates)
   #   numbers = coordinates.map { |coordinate| coordinate.split('')[1]}
   #   if numbers.uniq.count != 1
