@@ -59,8 +59,14 @@ class Game
     print "\nEnter a coordinate to fire: \n"
     shot = gets.chomp.upcase
     if @computer.board.valid_coordinate?(shot) == true
-      @computer.board.cells[shot].fire_upon
-      print player_fire_feedback(shot) + "\n"
+      if @player_shot_selection.include?(shot) != true
+        @computer.board.cells[shot].fire_upon
+        @player_shot_selection << shot
+        print player_fire_feedback(shot) + "\n"
+      else
+        print "We've already fired on this coordinate. Choose another.\n"
+        player_fire
+      end
     else print "\nNo viable firing solution on this location. Try again!\n"
       player_fire
     end      
@@ -86,6 +92,7 @@ class Game
   def run_game
     menu
     @computer_shot_selection = @player.board.cells.keys
+    @player_shot_selection = []
     @computer.place_submarine
     @computer.place_cruiser
     @player.player_cruiser
