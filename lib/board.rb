@@ -8,7 +8,7 @@ class Board
                 :columns,
                 :rows
 
-  def initialize(columns, rows)
+  def initialize(columns = 4, rows = 4)
     @columns = columns
     @rows = rows
     @numbers = (1..columns).to_a

@@ -11,14 +11,13 @@ class Computer
                 :submarine
 
   def initialize
-    @board = Board.new(4, 4)
+    @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
   end
 
   def ship_place(ship)
     coordinates = []
-
     until @board.valid_placement?(ship,coordinates)
       coordinates = []
       ship.length.times do
@@ -26,7 +25,6 @@ class Computer
         coordinates.sort!
       end
     end
-
     return coordinates
   end
 
@@ -38,7 +36,6 @@ class Computer
   def place_submarine
     coordinates = ship_place(@submarine)
     @board.place(@submarine, coordinates)
-
   end
 
 end

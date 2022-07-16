@@ -10,7 +10,7 @@ class Player
   attr_accessor :board
 
   def initialize
-    @board = Board.new(4, 4)
+    @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
   end
