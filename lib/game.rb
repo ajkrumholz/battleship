@@ -13,54 +13,54 @@ class Game
     @player = Player.new
   end
 
+  def intro
+    print "\n\n\nWelcome to BATTLESHIP, Freedom Fighter\n\n\n"
+    run_game
+  end
+
+
+
   def menu
-    print "Enter p to play. Enter q to quit. "
+    print "\nEnter p to play. Enter q to quit. "
     answer = gets.chomp.downcase
     if answer == 'p'
-      start #move into play game/place ship
+      start
     elsif answer == 'q'
       exit!
     else
-      puts "Invalid input, please try again"
-      self.menu# give error and rerun "Enter p to play. Enter q to quit. "
+      puts "\nInvalid input, please try again\n\n"
+      self.menu
     end
   end
 
   def start
-    # computer places ships
-    print "I have laid out my ships on the grid.\n" +
+    print "\n\nI have laid out my ships on the grid.\n" +
     "You now need to lay out your two ships.\n" +
-    "The Cruiser is three units long and the Submarine is two units long.\n"
-    # render board for user to input ship 1
+    "The Cruiser is three units long and the Submarine is two units long.\n\n"
   end
 
   def render_boards
     print "\n=============COMPUTER BOARD=============\n"
     print @computer.board.render
     print "=============PLAYER BOARD=============\n"
-    print @player.board.render(true)
-    print ""
+    print @player.board.render(true) + "\n"
+    
   end
 
   def player_fire
-    print "\nCaptain, we have an open shot!\n"
+    print "Enter a coordinate to fire: "
     shot = gets.chomp.upcase
-    @computer.board.cells[shot].fire_upon 
-    # verify valid shot
+    if @computer.board.valid_coordinate?(shot) == true
+      @computer.board.cells[shot].fire_upon
+    else print "No viable firing solution on this location. Try again!\n"
+      player_fire
+    end      
   end
   
   def computer_fire
     shot = @computer_shot_selection.shuffle!.shift
     @player.board.cells[shot].fire_upon 
-require 'pry'; binding.pry
     print "\nThey have fired back!\n"
-
-    # need to remove fire_upon cells from array
-  end
-
-  def intro
-    print "Welcome to BATTLESHIP, Freedom Fighter\n"
-    run_game
   end
 
   def run_game
@@ -72,6 +72,7 @@ require 'pry'; binding.pry
     @player.player_submarine
     until computer_wins? || player_wins?
       render_boards
+      print "Captain, we have an open shot!\n\n"
       player_fire
       computer_fire
     end
@@ -88,9 +89,9 @@ require 'pry'; binding.pry
 
   def end_game
     if player_wins?
-      print "We have ended the Cold War!! "
+      print "We have ended the Cold War!! \n\n\n\n"
     else
-      print "The Iron Curtain has overcome!"
+      print "The Iron Curtain has overcome! \n\n\n\n"
     end
     run_game
   end
