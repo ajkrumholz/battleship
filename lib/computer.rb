@@ -5,7 +5,7 @@ require './lib/game'
 require 'pry'
 
 class Computer
-  attr_reader :board, :ship
+  attr_accessor :board
 
   def initialize
     @board = Board.new
