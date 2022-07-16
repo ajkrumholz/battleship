@@ -7,7 +7,8 @@ require 'pry'
 
 class Game
   attr_reader :computer, 
-              :player
+              :player,
+              :difficulty
   attr_accessor :columns,
                 :rows
   def initialize
@@ -15,6 +16,7 @@ class Game
     @rows = rows
     @computer = Computer.new
     @player = Player.new
+    @difficulty = 1
   end
 
   def print_slow(string)
@@ -56,6 +58,14 @@ class Game
     print_very_slow("\nEnter p to play. Enter q to quit. ")
     answer = gets.chomp.downcase
     if answer == 'p'
+      print "\n Please select difficulty (1. Easy, 2. Hard): "
+      answer = gets.chomp.to_i
+      if answer > 0 && answer < 3
+        @difficulty = answer
+      else
+        print "Invalid input, please try again."
+        menu
+      end
       print "\nPlease select board width (between 4 and 10 cells): "
       @columns = gets.chomp.to_i
         if @columns < 4 || @columns > 10
@@ -139,6 +149,42 @@ class Game
     @player.board.cells[shot].fire_upon 
     print_very_slow(computer_fire_feedback(shot) + "\n")
   end
+  
+  def computer_fire_hard
+    if @computer.hunting == false
+      shot = @computer_shot_selection.shuffle!.shift
+      @player.board.cells[shot].fire_upon 
+      print_very_slow(computer_fire_feedback(shot) + "\n")
+      if @player.board.cells[shot].render == "H"
+        @computer.recent_hit = shot
+        @computer.hunting = true
+      end
+    elsif @computer.hunting == true
+      shot = @computer.recent_hit
+      intelligent_shot = []
+      intelligent_shot << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
+      intelligent_shot << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
+      intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
+      intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
+      intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
+      shot = intelligent_shot.shuffle!.shift
+      require 'pry'; binding.pry
+      @player.board.cells[shot].fire_upon
+      print_very_slow(computer_fire_feedback(shot) + "\n")
+      @computer_shot_selection.delete(shot)
+      case @player.board.cells[shot].render
+        when "H"
+        @computer.recent_hit = shot
+        @computer.hunting = true
+        when "X"
+        @computer.recent_hit = nil
+        @computer.hunting = false
+        when "M"
+        @computer.recent_hit = nil
+        @computer.hunting = false
+      end
+    end
+  end
 
   def run_game
     menu
@@ -155,7 +201,11 @@ class Game
       if self.player_wins? == true
         end_game
       end
-      computer_fire
+      if @difficulty == 1
+        computer_fire
+      else
+        computer_fire_hard
+      end
     end
     end_game
   end

@@ -8,12 +8,16 @@ class Computer
   
   attr_accessor :board,
                 :cruiser, 
-                :submarine
+                :submarine,
+                :hunting,
+                :recent_hit
 
   def initialize
     @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
+    @hunting = false
+    @recent_hit = nil
   end
 
   def ship_place(ship)
