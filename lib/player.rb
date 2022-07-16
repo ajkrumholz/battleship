@@ -6,20 +6,16 @@ require 'pry'
 
 
 class Player
-  attr_reader :board, 
+  attr_reader :cruiser, :submarine
+  attr_accessor :board
 
   def initialize
     @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
-    @sub = Ship.new("Submarine", 2)
-    # @ships = [@cruiser, @sub]
+    @submarine = Ship.new("Submarine", 2)
   end
 
-  def ship_place(ship)
-    coordinates = []
 
-    until @board.valid_placement?(ship,coordinates)
-      coordinates = []
       # ship.length.times do
       #   coordinates << @board.cells.keys.sample
       #   coordinates.sort!
@@ -31,15 +27,4 @@ class Player
     #   if @board.valid_placement?(ship,coordinates) == true
     #     @board.place_cruiser(ship, coordinates)
       # else
-  
-    end
-  end
-
-  def place_cruiser
-    coordinates = ship_place(@cruiser)
-    @board.place(@cruiser, coordinates)
-  end
-
-
-
 end
