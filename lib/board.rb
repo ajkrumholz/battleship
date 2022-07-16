@@ -44,20 +44,10 @@ class Board
     coordinates.uniq.count == ship.length
   end
 
-  # def consecutive_coordinates?(coordinates)
-  #   consecutive_letters(coordinates) && consecutive_numbers(coordinates)
-  # end
-    # # placement_coords.sort == placement_coords
-    # letters = []
-    # numbers = []
-    # coordinates.each do |coordinate|
-    #   letters << coordinate.split('')[0]
-    #   numbers << coordinate.split('')[1]
-    # end
-
   def consecutive_coordinates?(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
-    numbers = coordinates.flat_map { |coordinate| coordinate.split('')[1] }
+    numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
+
     if letters.uniq.count == coordinates.count
       letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
     elsif numbers.uniq.count == coordinates.count
@@ -73,7 +63,8 @@ class Board
 
   def not_diagonal(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
-    numbers = coordinates.flat_map { |coordinate| coordinate.split('')[1] }
+    numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
+
     if letters.uniq.count == 1 && numbers.uniq.count == coordinates.count
       true
     elsif numbers.uniq.count == 1 && letters.uniq.count == coordinates.count
@@ -83,39 +74,12 @@ class Board
     end
   end
   
-  # def consecutive_numbers(coordinates)
-  #   numbers = coordinates.map { |coordinate| coordinate.split('')[1]}
-  #   if numbers.uniq.count != 1
-  #     numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
-  #   else
-  #     true
-  #   end
-  # end
-    # if letters.uniq.count == 1 && numbers.uniq.count != 1
-    #   numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
-
-    # elsif numbers.uniq.count == 1 && letters.uniq.count != 1
-    #   letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
-    # end
-    
-
-
   def render(state = false)
-#     render_array = (cells.values.map { |cell| cell.render(state) }).each_slice(4).to_a
-#     require 'pry'; binding.pry
-#     "  1 2 3 4 \n" + 
-#     "A " + render_array[0].join(' ') + " \n" +
-#     "B " + render_array[1].join(' ') + " \n" +
-#     "C " + render_array[2].join(' ') + " \n" +
-#     "D " + render_array[3].join(' ') + " \n"
-#   end
-# end
-  # code below helps make more scaleable
     letters = []
     numbers = []
     @cells.keys.each do |coord|
       letters << coord.split('')[0]
-      numbers << coord.split('')[1]
+      numbers << coord.split('',2)[1]
     end
     header = "  #{numbers.uniq.join(' ')} \n"
     board_display = []
@@ -133,6 +97,5 @@ class Board
       board_display << "\n"   
     end
     header + board_display.join
-    require 'pry'; binding.pry
   end
 end

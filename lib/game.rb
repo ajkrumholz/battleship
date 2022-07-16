@@ -26,13 +26,14 @@ class Game
     print "\nEnter p to play. Enter q to quit. "
     answer = gets.chomp.downcase
     if answer == 'p'
-      print "\nSelect board width: "
+      print "\nPlease select board width between 4 and 10 cells: "
       @columns = gets.chomp.to_i
-      print "\nSelect board height: "
+      print "\nPlease select board height between 4 and 10 cells: "
       @rows = gets.chomp.to_i
-      require 'pry'; binding.pry
       @player.board = Board.new(@columns, @rows)
+      @player.board.build_board
       @computer.board = Board.new(@columns, @rows)
+      @computer.board.build_board
       start
     elsif answer == 'q'
       exit!
