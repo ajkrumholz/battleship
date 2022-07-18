@@ -172,7 +172,7 @@ class Game
     when "H"
       "Contact! We're picking up distress signals!\n"
     when "X"
-      "Contact! Target sensors have gone dark! That's a kill\n"
+      "Contact! Target sensors have gone dark! That's a kill.\n"
     end
   end
 
@@ -224,15 +224,7 @@ class Game
         @computer.hunting = true
       end
     elsif @computer.hunting == true
-      # shot = @computer.recent_hit
-      firing_radius
-      # intelligent_shot = []
-      # intelligent_shot << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
-      # intelligent_shot << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
-      # intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
-      # intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
-      # intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
-      # shot = intelligent_shot.shuffle!.shift
+      shot = firing_radius
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
       @computer_shot_selection.delete(shot)
@@ -270,14 +262,8 @@ class Game
       render_boards
       print_very_slow("Captain, we have an open shot!\n")
       player_fire
-      if self.player_wins? == true
-        end_game
-      end
-      if @difficulty == 1
-        computer_fire_easy
-      else
-        computer_fire_hard
-      end
+      end_game if self.player_wins? == true
+      @difficulty == 1 ? computer_fire_easy : computer_fire_hard
     end
   end
 
@@ -328,7 +314,6 @@ class Game
     # unit @player.board.cells ship.sunk = true
     # when @player.board.cells = fired_upon == true && ship.sunk == false
     # intelligent_shot << firing_radius
-    
   end
 
   def firing_radius
