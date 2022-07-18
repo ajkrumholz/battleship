@@ -168,7 +168,6 @@ class Game
       intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
       intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
       shot = intelligent_shot.shuffle!.shift
-      require 'pry'; binding.pry
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
       @computer_shot_selection.delete(shot)
