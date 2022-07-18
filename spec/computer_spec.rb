@@ -11,16 +11,16 @@ RSpec.describe Computer do
   let(:player) {Player.new}
 
 
-  it 'exists' do
+  xit 'exists' do
     expect(computer).to be_instance_of(described_class)
   end
 
-  it 'has ships by default' do
-    expect(computer.cruiser.name).to eq("Cruiser")
-    expect(computer.submarine.name).to eq("Submarine")
+  xit 'has ships by default' do
+    expect(computer.ships[:cruiser].name).to eq("Cruiser")
+    expect(computer.ships[:submarine].name).to eq("Submarine")
   end
   
-  it 'places ships at random' do
+  xit 'places ships at random' do
     computer.board.build_board
     computer.place_cruiser
     computer.place_submarine

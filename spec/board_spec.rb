@@ -3,7 +3,7 @@ require './lib/ship'
 require 'pry'
 
 RSpec.describe Board do
-  let(:board) {described_class.new(10, 10)}
+  let(:board) {described_class.new(4, 4)}
   let(:submarine) {Ship.new("Submarine", 2)}
   let(:cruiser) {Ship.new("Cruiser", 3)}
 
@@ -23,8 +23,8 @@ RSpec.describe Board do
   it '3. validates coordinates' do
     expect(board.valid_coordinate?("A1")).to eq(true)
     expect(board.valid_coordinate?("D4")).to eq(true)
-    expect(board.valid_coordinate?("A5")).to eq(true)
-    expect(board.valid_coordinate?("E1")).to eq(true)
+    expect(board.valid_coordinate?("A5")).to eq(false)
+    expect(board.valid_coordinate?("E1")).to eq(false)
     expect(board.valid_coordinate?("B44")).to eq(false)
     expect(board.valid_coordinate?("E11")).to eq(false)
     expect(board.valid_coordinate?("K1")).to eq(false)
