@@ -1,11 +1,7 @@
 require_relative 'lib/game'
-# require 'ruby2d'
-
+require 'ruby2d'
+menu_theme = Sound.new('menu_theme.mp3')
+menu_theme.play
 game = Game.new
-
-# boom = Sound.new('menu_theme.mp3')
-# boom.play
-
 game.intro
 game.menu
-
