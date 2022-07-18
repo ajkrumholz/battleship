@@ -213,19 +213,17 @@ class Game
   
   def computer_fire_hard
     if @computer.hunting == false
-      shot = computer_shot_potentials.shuffle!.shift#@computer_shot_selection.shuffle!.shift
+      shot = computer_shot_potentials.shuffle!.shift
       @player.board.cells[shot].fire_upon 
       print_very_slow(computer_fire_feedback(shot) + "\n")
-      # shot = @computer_shot_selection.shuffle!.shift
-      # @player.board.cells[shot].fire_upon 
-      # print_very_slow(computer_fire_feedback(shot) + "\n")
+
       if @player.board.cells[shot].render == "H"
         @computer.recent_hit = shot
         @computer.hunting = true
       end
+
     elsif @computer.hunting == true
       # shot = @computer.recent_hit
-      firing_radius
       # intelligent_shot = []
       # intelligent_shot << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
       # intelligent_shot << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
@@ -233,9 +231,9 @@ class Game
       # intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
       # intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
       # shot = intelligent_shot.shuffle!.shift
+      shot = firing_radius
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
-      @computer_shot_selection.delete(shot)
       computer_hunting(shot)
     end
   end
@@ -324,21 +322,20 @@ class Game
     shot_potentials
   end
 
-  def computer_intelligent_shot
-    # unit @player.board.cells ship.sunk = true
-    # when @player.board.cells = fired_upon == true && ship.sunk == false
-    # intelligent_shot << firing_radius
-    
+  def computer_hits
+    computer_hits = []
+    @player.board.cells.each do |key, value|
+      if value.fired_upon == true && value.ship != nil
+        computer_hits << key
+      end
+    end
+    computer_hits
   end
 
   def firing_radius
     shot = @computer.recent_hit
     firing_radius = []
-    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
-    firing_radius << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
-    firing_radius << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
-    firing_radius << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
-    firing_radius.sort!
+    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
     firing_radius.reject! { |element| @player.board.valid_coordinate?(element) == false }
     shot = firing_radius.shuffle!.shift
   end
