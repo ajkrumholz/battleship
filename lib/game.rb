@@ -264,17 +264,6 @@ class Game
     end
   end
 
-  # def fire_pattern
-  #   print_very_slow("Captain, we have an open shot!\n")
-  #   player_fire
-  #   end_game if self.player_wins? == true
-  #   if @difficulty == 1
-  #     computer_fire
-  #   else
-  #     computer_fire_hard
-  #   end
-  # end
-
   def computer_wins?
     @player.ships.all? { |ship| ship.sunk? == true }
   end
