@@ -11,23 +11,31 @@ class Player
 
   def initialize
     @board = Board.new
-    @ships = {}
+    @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
     # @ships = game.ships
   end
 
-  # how to get that strategy is not ideal feedback to print and give another chance rather than starting over?
+  def print_very_slow(string)
+    string.split(//).each do |character|
+      sleep 0.04
+      print character
+    end
+  end
+
   def place_ships
     print @board.render(true)
-    @ships.each do |key, ship|
-      print "\nEnter the squares for the #{ship.name} (#{ship.length} spaces): "
-      coordinates = gets.chomp.upcase.split(" ").sort
-      if @board.valid_placement?(ship, coordinates) == true
-        @board.place(ship, coordinates)
-        print "\n" + @board.render(true)
-        else
-          print "\nThat strategy is not ideal. Please try again.\n\n"
-          place_ships
+    @ships.each do |ship|
+      coordinates = []
+      until @board.valid_placement?(ship, coordinates) == true
+        print "\nEnter the squares for the #{ship.name} (#{ship.length} spaces): "
+        coordinates = gets.chomp.upcase.split(" ").sort
+        if @board.valid_placement?(ship, coordinates) == false
+          print_very_slow("\nThat strategy is not ideal. Please try again.\n\n")
+          print @board.render(true) + "\n"
+        end
       end
+      @board.place(ship, coordinates)
+      print "\n" + @board.render(true)
     end
   end
 

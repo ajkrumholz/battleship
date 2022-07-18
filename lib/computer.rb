@@ -13,7 +13,7 @@ class Computer
 
   def initialize
     @board = Board.new
-    @ships = {}
+    @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
     @hunting = false
     @recent_hit = nil
   end
@@ -31,7 +31,7 @@ class Computer
   end
 
   def place_ships
-    @ships.each do |key, ship|
+    @ships.each do |ship|
       coordinates = ship_placer(ship)
       @board.place(ship, coordinates)
     end
