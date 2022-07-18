@@ -14,7 +14,6 @@ class Game
   def initialize
     @columns = columns
     @rows = rows
-    # @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
     @computer = Computer.new
     @player = Player.new
     @difficulty = 1
@@ -157,7 +156,7 @@ class Game
     "\nYou now need to lay out your #{player.ships.size} ships.\n\n")
   end
 
-  def render_boards(state = false) # can be changed to true to make debugging simpler
+  def render_boards(state = false)
     print "\n" * 30
     print "\n=============COMPUTER BOARD=============\n"
     print@computer.board.render(state)
@@ -206,28 +205,26 @@ class Game
   end
 
   def computer_fire_easy
-    shot = computer_shot_potentials.shuffle!.shift #@computer_shot_selection.shuffle!.shift
+    shot = computer_shot_potentials.shuffle!.shift
     @player.board.cells[shot].fire_upon 
     print_very_slow(computer_fire_feedback(shot) + "\n")
   end
   
   def computer_fire_hard
     if @computer.hunting == false
-      shot = computer_shot_potentials.shuffle!.shift#@computer_shot_selection.shuffle!.shift
+      shot = computer_shot_potentials.shuffle!.shift
       @player.board.cells[shot].fire_upon 
       print_very_slow(computer_fire_feedback(shot) + "\n")
-      # shot = @computer_shot_selection.shuffle!.shift
-      # @player.board.cells[shot].fire_upon 
-      # print_very_slow(computer_fire_feedback(shot) + "\n")
+
       if @player.board.cells[shot].render == "H"
         @computer.recent_hit = shot
         @computer.hunting = true
       end
+
     elsif @computer.hunting == true
       shot = firing_radius
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
-      @computer_shot_selection.delete(shot)
       computer_hunting(shot)
     end
   end
@@ -294,6 +291,10 @@ class Game
       render_boards(true)
       print "The Iron Curtain has overcome! \n\n\n\n"
     end
+    game_reset    
+  end
+
+  def game_reset
     @player = Player.new
     @computer = Computer.new
     @ships = {cruiser: Ship.new("Cruiser", 3), submarine: Ship.new("Submarine", 2)}
@@ -310,20 +311,20 @@ class Game
     shot_potentials
   end
 
-  def computer_intelligent_shot
-    # unit @player.board.cells ship.sunk = true
-    # when @player.board.cells = fired_upon == true && ship.sunk == false
-    # intelligent_shot << firing_radius
+  def computer_hits
+    computer_hits = []
+    @player.board.cells.each do |key, value|
+      if value.fired_upon == true && value.ship != nil
+        computer_hits << key
+      end
+    end
+    computer_hits
   end
 
   def firing_radius
     shot = @computer.recent_hit
     firing_radius = []
-    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
-    firing_radius << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
-    firing_radius << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
-    firing_radius << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
-    firing_radius.sort!
+    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
     firing_radius.reject! { |element| @player.board.valid_coordinate?(element) == false }
     shot = firing_radius.shuffle!.shift
   end
