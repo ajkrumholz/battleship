@@ -223,6 +223,14 @@ class Game
       end
 
     elsif @computer.hunting == true
+      # shot = @computer.recent_hit
+      # intelligent_shot = []
+      # intelligent_shot << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join
+      # intelligent_shot << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join
+      # intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join
+      # intelligent_shot << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
+      # intelligent_shot.reject! { |element| @player.board.valid_coordinate?(element) == false }
+      # shot = intelligent_shot.shuffle!.shift
       shot = firing_radius
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
