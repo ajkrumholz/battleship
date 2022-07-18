@@ -14,6 +14,7 @@ class Game
   def initialize
     @columns = columns
     @rows = rows
+    @ships = {cruiser: Ship.new("Cruiser", 3), submarine: Ship.new("Submarine", 2)}
     @computer = Computer.new
     @player = Player.new
     @difficulty = 1
@@ -58,31 +59,7 @@ class Game
     print_very_slow("\nEnter p to play. Enter q to quit. ")
     answer = gets.chomp.downcase
     if answer == 'p'
-      print "\n Please select difficulty (1. Easy, 2. Hard): "
-      answer = gets.chomp.to_i
-      if answer > 0 && answer < 3
-        @difficulty = answer
-      else
-        print "Invalid input, please try again."
-        menu
-      end
-      print "\nPlease select board width (between 4 and 10 cells): "
-      @columns = gets.chomp.to_i
-        if @columns < 4 || @columns > 10
-          print "Invalid width, please try again."
-          menu
-        end
-      print "\nPlease select board height (between 4 and 10 cells): "
-      @rows = gets.chomp.to_i
-        if @rows < 4 || @rows > 10
-          print "\nInvalid height, please try again.\n"
-          menu
-        end
-      @player.board = Board.new(@columns, @rows)
-      @player.board.build_board
-      @computer.board = Board.new(@columns, @rows)
-      @computer.board.build_board
-      start
+      menu_setup_options
     elsif answer == 'q'
       exit!
     else
@@ -91,14 +68,96 @@ class Game
     end
   end
 
-  def start
+  def menu_setup_options
+    difficulty_select
+    custom_board
+    custom_ships
+  end
+
+
+  def difficulty_select
+    print "\nPlease select difficulty (1. Easy, 2. Hard): "
+    answer = gets.chomp.to_i
+    if answer > 0 && answer < 3
+      @difficulty = answer
+    else
+      print "Invalid input, please try again."
+      difficulty_select
+    end
+  end
+  
+  def custom_board
+    custom_columns
+    custom_rows
+    @player.board = Board.new(@columns, @rows)
+    @player.board.build_board
+    @computer.board = Board.new(@columns, @rows)
+    @computer.board.build_board
+  end
+
+  def custom_columns
+    print "\nPlease select board width (between 4 and 10 cells): "
+    @columns = gets.chomp.to_i
+    if @columns < 4 || @columns > 10
+      print "Invalid width, please try again."
+      custom_columns
+    end
+  end
+
+  def custom_rows
+    print "\nPlease select board height (between 4 and 10 cells): "
+    @rows = gets.chomp.to_i
+    if @rows < 4 || @rows > 10
+      print "\nInvalid height, please try again.\n"
+      custom_rows
+    end
+  end
+
+  def custom_ships
+    print_very_slow("\nIf you so choose, you may dispatch additional craft to the theater.\n")
+    custom_ships_menu
+  end
+
+  def custom_ships_menu
+    print "\nWould you like to add another craft to the fleet? (y/n): "
+    answer = gets.chomp
+    case answer
+    when "y"
+      custom_ships_entry
+    when "n"
+      print_very_slow("\nWelding, riveting, articulating splines...\n")
+    else
+      print_very_slow("Invalid input, please try again")
+      custom_ships_menu
+    end
+  end
+
+  def custom_ships_entry
+    print "\nEnter a name and length for your craft.\n"
+    print "\nName: "
+    name = gets.chomp
+    print "\nLength (remember, ships must fit on the board): "
+    length = gets.chomp
+    custom_ships_validation(name, length)
+  end
+
+  def custom_ships_validation(name, length)
+    if length.to_i < @rows && length.to_i < @columns
+      @ships[name.downcase.to_sym] = Ship.new(name, length.to_i)
+      custom_ships_menu
+    else
+      print_very_slow("\nInvalid length, please try again.")
+      custom_ships_entry
+    end
+  end
+
+  def player_place_ships_dialog
     print_very_slow("\nI have laid out my ships on the grid.\n" +
-    "\nYou now need to lay out your two ships.\n" +
-    "\nThe Cruiser is three units long and the Submarine is two units long.\n\n")
+    "\nYou now need to lay out your #{@ships.size} ships.\n\n")
   end
 
   def render_boards
-    print "=============COMPUTER BOARD=============\n"
+    print "\n=============COMPUTER BOARD=============\n"
     print@computer.board.render
     print "=============PLAYER BOARD=============\n"
     print@player.board.render(true) + "\n"
@@ -175,38 +234,38 @@ class Game
       # shot = intelligent_shot.shuffle!.shift
       @player.board.cells[shot].fire_upon
       print_very_slow(computer_fire_feedback(shot) + "\n")
+      @computer_shot_selection.delete(shot)
+      computer_hunting(shot)
+    end
+  end
 
-      case @player.board.cells[shot].render
-        when "H"
-        @computer.recent_hit = shot
-        @computer.hunting = true
-        when "X"
-        @computer.recent_hit = nil
-        @computer.hunting = false
-        when "M"
-        @computer.recent_hit = nil
-        @computer.hunting = false
-      end
+  def computer_hunting(shot)
+    case @player.board.cells[shot].render
+    when "H"
+    @computer.recent_hit = shot
+    @computer.hunting = true
+    when "X"
+    @computer.recent_hit = nil
+    @computer.hunting = false
+    when "M"
+    @computer.recent_hit = nil
+    @computer.hunting = false
     end
   end
 
   def run_game
 
     menu
-    # @computer_shot_selection = @player.board.cells.keys
+    @computer.ships = @ships
+    @player.ships = @ships
     computer_shot_potentials
     @player_shot_selection = []
-    computer_game_setup
-    @player.player_cruiser
-    @player.player_submarine
+    @computer.place_ships
+    player_place_ships_dialog
+    @player.place_ships
     play_game
     end_game
   end
-
-  def computer_game_setup
-    @computer.place_submarine
-    @computer.place_cruiser
-  end 
   
   def play_game
     until computer_wins? || player_wins?
@@ -224,12 +283,23 @@ class Game
     end
   end
 
+  def fire_pattern
+    print "Captain, we have an open shot!\n"
+    player_fire
+    end_game if self.player_wins? == true
+    if @difficulty == 1
+      computer_fire
+    else
+      computer_fire_hard
+    end
+  end
+
   def computer_wins?
-    @player.submarine.sunk? && @player.cruiser.sunk?
+    @player.ships.all? { |key, ship| ship.sunk? == true }
   end
 
   def player_wins?
-    @computer.submarine.sunk? && @computer.cruiser.sunk?
+    @computer.ships.all? { |key, ship| ship.sunk? == true }
   end
 
   def end_game
@@ -242,6 +312,7 @@ class Game
     end
     @player = Player.new
     @computer = Computer.new
+    @ships = {cruiser: Ship.new("Cruiser", 3), submarine: Ship.new("Submarine", 2)}
     run_game
   end
 
