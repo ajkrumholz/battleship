@@ -12,7 +12,6 @@ class Player
   def initialize
     @board = Board.new
     @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
-    # @ships = game.ships
   end
 
   def print_very_slow(string, time = 0.04)
@@ -38,30 +37,4 @@ class Player
       print "\n" + @board.render(true)
     end
   end
-
-  # def player_cruiser
-  #   print @board.render(true)
-  #   print "\nEnter the squares for the Cruiser (3 spaces): "
-  #   coordinates = gets.chomp.upcase.split(" ").sort
-  #   print "\n"
-  #   if @board.valid_placement?(@cruiser, coordinates) == true
-  #     @board.place(@cruiser, coordinates)
-  #     else
-  #       print "That strategy is not ideal. Please try again.\n\n"
-  #       player_cruiser
-  #   end
-  # end
-
-  # def player_submarine
-  #   print @board.render(true)
-  #   print "\nEnter the squares for the Submarine (2 spaces): "
-  #   coordinates = gets.chomp.upcase.split(" ").sort
-  #   print "\n"
-  #   if @board.valid_placement?(@submarine, coordinates) == true
-  #     @board.place(@submarine, coordinates)
-  #     else
-  #       print "That strategy is not ideal. Please try again.\n\n"
-  #       player_submarine
-  #   end
-  # end
 end

@@ -64,7 +64,6 @@ class Board
   def not_diagonal(coordinates)
     letters = coordinates.map { |coordinate| coordinate.split('')[0] }
     numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
-
     if letters.uniq.count == 1 && numbers.uniq.count == coordinates.count
       true
     elsif numbers.uniq.count == 1 && letters.uniq.count == coordinates.count
@@ -74,18 +73,15 @@ class Board
     end
   end
   
+  # what's a good way to break this out into multiple methods? board_display being used as an accumulator makes it difficult to break up the nested enumerable.
   def render(state = false)
-    letters = []
-    numbers = []
-    @cells.keys.each do |coord|
-      letters << coord.split('')[0]
-      numbers << coord.split('',2)[1]
-    end
-    header = "  #{numbers.uniq.join(' ')} \n"
+    render_letters
+    render_numbers
+    header = "  #{render_numbers.uniq.join(' ')} \n"
     board_display = []
-    letters.uniq.each do |letter|
+    render_letters.uniq.each do |letter|
       board_display << "#{letter} "
-      cells.values.each do |cell|
+      @cells.values.each do |cell|
         if cell.coordinate[0] == letter
           if state == false
           board_display << "#{cell.render} "
@@ -94,8 +90,16 @@ class Board
           end
         end
       end
-      board_display << "\n"   
+      board_display << "\n" 
     end
-    header + board_display.join
+    header + board_display.join + "\n"
   end
+end
+
+def render_letters
+  @cells.keys.map { |coord| coord.split('')[0] }
+end
+
+def render_numbers
+  @cells.keys.map { |coord| coord.split('',2)[1] }
 end
