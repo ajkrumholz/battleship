@@ -2,6 +2,7 @@ require 'pry'
 
 class Cell
   attr_reader :coordinate, :ship, :fired_upon
+
   def initialize(coordinate)
     @coordinate = coordinate
     @ship = nil
@@ -9,7 +10,7 @@ class Cell
   end
 
   def empty?
-    @ship == nil
+    @ship.nil?
   end
 
   def place_ship(ship)
@@ -17,7 +18,7 @@ class Cell
   end
 
   def fire_upon
-    @ship.hit if @ship != nil
+    @ship.hit unless @ship.nil?
     @fired_upon = true
   end
 
@@ -27,21 +28,19 @@ class Cell
 
   def render(state = false)
     if @fired_upon == false
-      if state == true && @ship != nil
-        "S"
+      if state == true && !@ship.nil?
+        'S'
       else
-        "."      
+        '.'
       end
     elsif @fired_upon == true
-      if @ship == nil
-        "M"
+      if @ship.nil?
+        'M'
+      elsif @ship.health == 0
+        'X'
       else
-        if @ship.health == 0
-          "X"
-        else
-          "H"
-        end
+        'H'
       end
     end
-  end  
+  end
 end

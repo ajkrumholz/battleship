@@ -4,14 +4,13 @@ require './lib/ship'
 require './lib/game'
 require 'pry'
 
-
 class Player
   attr_accessor :board,
                 :ships
 
   def initialize
     @board = Board.new
-    @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
+    @ships = [Ship.new('Cruiser', 3), Ship.new('Submarine', 2)]
   end
 
   def print_very_slow(string, time = 0.04)
@@ -27,7 +26,7 @@ class Player
       coordinates = []
       until @board.valid_placement?(ship, coordinates) == true
         print "\nEnter the squares for the #{ship.name} (#{ship.length} spaces): "
-        coordinates = gets.chomp.upcase.split(" ").sort
+        coordinates = gets.chomp.upcase.split(' ').sort
         if @board.valid_placement?(ship, coordinates) == false
           print "\nThat strategy is not ideal. Please try again.\n"
           print @board.render(true) + "\n"

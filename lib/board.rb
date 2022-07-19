@@ -2,8 +2,8 @@ require './lib/cell'
 require 'pry'
 
 class Board
-  attr_reader :numbers, 
-              :letters 
+  attr_reader :numbers,
+              :letters
   attr_accessor :cells,
                 :columns,
                 :rows
@@ -25,19 +25,20 @@ class Board
       end
     end
   end
-  
+
   def valid_coordinate?(coordinate)
     @cells.has_key?(coordinate)
-  end 
+  end
 
   def place(ship, cell_array)
     cell_array.each do |cell|
       @cells[cell].place_ship(ship)
     end
   end
-  
+
   def valid_placement?(ship, coordinates)
-    valid_placement_length?(ship, coordinates) && consecutive_coordinates?(coordinates) && overlapping?(coordinates) && not_diagonal(coordinates)
+    valid_placement_length?(ship,
+                            coordinates) && consecutive_coordinates?(coordinates) && overlapping?(coordinates) && not_diagonal(coordinates)
   end
 
   def valid_placement_length?(ship, coordinates)
@@ -49,15 +50,15 @@ class Board
     numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
 
     if letters.uniq.count == coordinates.count
-      letters.each_cons(2).all? { |a,b| a.ord == b.ord - 1 }
+      letters.each_cons(2).all? { |a, b| a.ord == b.ord - 1 }
     elsif numbers.uniq.count == coordinates.count
-      numbers.each_cons(2).all? { |a,b| a.to_i == b.to_i - 1 }
+      numbers.each_cons(2).all? { |a, b| a.to_i == b.to_i - 1 }
     end
   end
 
   def overlapping?(coordinates)
     coordinates.all? do |coordinate|
-      valid_coordinate?(coordinate) && @cells[coordinate].ship == nil
+      valid_coordinate?(coordinate) && @cells[coordinate].ship.nil?
     end
   end
 
@@ -72,7 +73,7 @@ class Board
       false
     end
   end
-  
+
   # what's a good way to break this out into multiple methods? board_display being used as an accumulator makes it difficult to break up the nested enumerable.
   def render(state = false)
     render_letters
@@ -84,13 +85,13 @@ class Board
       @cells.values.each do |cell|
         if cell.coordinate[0] == letter
           if state == false
-          board_display << "#{cell.render} "
+            board_display << "#{cell.render} "
           elsif state == true
-          board_display << "#{cell.render(true)} "
+            board_display << "#{cell.render(true)} "
           end
         end
       end
-      board_display << "\n" 
+      board_display << "\n"
     end
     header + board_display.join + "\n"
   end
@@ -101,5 +102,5 @@ def render_letters
 end
 
 def render_numbers
-  @cells.keys.map { |coord| coord.split('',2)[1] }
+  @cells.keys.map { |coord| coord.split('', 2)[1] }
 end

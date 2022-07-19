@@ -5,29 +5,28 @@ require './lib/game'
 require 'pry'
 
 class Computer
-  
-  attr_accessor :board,                
+  attr_accessor :board,
                 :hunting,
                 :recent_hit,
                 :ships
 
   def initialize
     @board = Board.new
-    @ships = [Ship.new("Cruiser", 3), Ship.new("Submarine", 2)]
+    @ships = [Ship.new('Cruiser', 3), Ship.new('Submarine', 2)]
     @hunting = false
     @recent_hit = nil
   end
 
   def ship_placer(ship)
     coordinates = []
-    until @board.valid_placement?(ship,coordinates)
+    until @board.valid_placement?(ship, coordinates)
       coordinates = []
       ship.length.times do
         coordinates << @board.cells.keys.sample
         coordinates.sort!
       end
     end
-    return coordinates
+    coordinates
   end
 
   def place_ships
@@ -41,5 +40,4 @@ class Computer
   #   coordinates = ship_place(@submarine)
   #   @board.place(@submarine, coordinates)
   # end
-
 end
