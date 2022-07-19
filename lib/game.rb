@@ -20,6 +20,8 @@ class Game
   end
 
   def intro
+    menu_theme = Sound.new('menu_theme.mp3')
+    menu_theme.play
     print "\n" * 50
     print ' ' * 18 + '-' * 2 + "\n"
     print ' ' * 16 + '-' * 6 + "\n"
