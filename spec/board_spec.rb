@@ -3,9 +3,9 @@ require './lib/ship'
 require 'pry'
 
 RSpec.describe Board do
-  let(:board) {described_class.new(10, 10)}
-  let(:submarine) {Ship.new("Submarine", 2)}
-  let(:cruiser) {Ship.new("Cruiser", 3)}
+  let(:board) { described_class.new(4, 4) }
+  let(:submarine) { Ship.new('Submarine', 2) }
+  let(:cruiser) { Ship.new('Cruiser', 3) }
 
   before(:each) do
     board.build_board
@@ -21,37 +21,37 @@ RSpec.describe Board do
   end
 
   it '3. validates coordinates' do
-    expect(board.valid_coordinate?("A1")).to eq(true)
-    expect(board.valid_coordinate?("D4")).to eq(true)
-    expect(board.valid_coordinate?("A5")).to eq(true)
-    expect(board.valid_coordinate?("E1")).to eq(true)
-    expect(board.valid_coordinate?("B44")).to eq(false)
-    expect(board.valid_coordinate?("E11")).to eq(false)
-    expect(board.valid_coordinate?("K1")).to eq(false)
-    expect(board.valid_coordinate?("A22")).to eq(false)
+    expect(board.valid_coordinate?('A1')).to eq(true)
+    expect(board.valid_coordinate?('D4')).to eq(true)
+    expect(board.valid_coordinate?('A5')).to eq(false)
+    expect(board.valid_coordinate?('E1')).to eq(false)
+    expect(board.valid_coordinate?('B44')).to eq(false)
+    expect(board.valid_coordinate?('E11')).to eq(false)
+    expect(board.valid_coordinate?('K1')).to eq(false)
+    expect(board.valid_coordinate?('A22')).to eq(false)
   end
 
   it '4. validates ship placements with length' do
-    expect(board.valid_placement?(cruiser, ["A1", "A2"])).to eq(false)
-    expect(board.valid_placement?(submarine, ["A2", "A3", "A4"])).to eq(false)
-    expect(board.valid_placement_length?(cruiser, ["B2", "B3", "B4"])).to eq(true)
-    expect(board.valid_placement_length?(submarine, ["C1", "C2"])).to eq(true)
+    expect(board.valid_placement?(cruiser, %w[A1 A2])).to eq(false)
+    expect(board.valid_placement?(submarine, %w[A2 A3 A4])).to eq(false)
+    expect(board.valid_placement_length?(cruiser, %w[B2 B3 B4])).to eq(true)
+    expect(board.valid_placement_length?(submarine, %w[C1 C2])).to eq(true)
   end
 
   it '5. validates placement coordinates are consecutive' do
-    expect(board.valid_placement?(cruiser, ["A1", "A2", "A4"])).to eq(false)
-    expect(board.valid_placement?(submarine, ["A1", "C1"])).to eq(false)
-    expect(board.valid_placement?(cruiser, ["A3", "A2", "A1"])).to eq(false)
-    expect(board.valid_placement?(submarine, ["C1", "B1"])).to eq(false)
-    expect(board.valid_placement?(cruiser, ["A1", "A2", "A3"])).to eq(true)
+    expect(board.valid_placement?(cruiser, %w[A1 A2 A4])).to eq(false)
+    expect(board.valid_placement?(submarine, %w[A1 C1])).to eq(false)
+    expect(board.valid_placement?(cruiser, %w[A3 A2 A1])).to eq(false)
+    expect(board.valid_placement?(submarine, %w[C1 B1])).to eq(false)
+    expect(board.valid_placement?(cruiser, %w[A1 A2 A3])).to eq(true)
   end
 
   it '6. can place ships in cells' do
-    board.place(cruiser, ["A1", "A2", "A3"])
+    board.place(cruiser, %w[A1 A2 A3])
 
-    cell_1 = board.cells["A1"]  
-    cell_2 = board.cells["A2"]  
-    cell_3 = board.cells["A3"] 
+    cell_1 = board.cells['A1']
+    cell_2 = board.cells['A2']
+    cell_3 = board.cells['A3']
 
     expect(cell_1.ship).to eq(cruiser)
     expect(cell_2.ship).to eq(cruiser)
@@ -60,13 +60,13 @@ RSpec.describe Board do
   end
 
   it '7. checks for overlapping ships' do
-    board.place(cruiser, ["A1", "A2", "A3"])
-    
-    expect(board.valid_placement?(submarine, ["A1", "B1"])).to eq(false)
+    board.place(cruiser, %w[A1 A2 A3])
+
+    expect(board.valid_placement?(submarine, %w[A1 B1])).to eq(false)
   end
 
   it '8. renders a board' do
-    board.place(cruiser, ["A1", "A2", "A3"])
+    board.place(cruiser, %w[A1 A2 A3])
 
     expect(board.render).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
     expect(board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
