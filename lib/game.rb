@@ -256,6 +256,7 @@ class Game
                                                                                    ].join << [shot.split(//)[0],
                                                                                               (shot.split(//)[1].to_i - 1).to_s].join
     firing_radius.reject! { |element| @player.board.valid_coordinate?(element) == false }
+    firing_radius.reject! { |element| computer_shot_potentials.include?(element) == false}
     shot = firing_radius.shuffle!.shift
   end
 
