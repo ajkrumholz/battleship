@@ -1,7 +1,6 @@
-require './lib/board'
-require './lib/cell'
-require './lib/ship'
 require './lib/game'
+require './lib/ship'
+require './lib/board'
 require 'pry'
 
 class Computer
@@ -35,9 +34,4 @@ class Computer
       @board.place(ship, coordinates)
     end
   end
-
-  # def place_submarine
-  #   coordinates = ship_place(@submarine)
-  #   @board.place(@submarine, coordinates)
-  # end
 end

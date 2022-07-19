@@ -93,7 +93,7 @@ class Board
       end
       board_display << "\n"
     end
-    header + board_display.join + "\n"
+    header + board_display.join
   end
 end
 
