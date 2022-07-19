@@ -1,6 +1,4 @@
 require './lib/board'
-require './lib/cell'
-require './lib/ship'
 require './lib/player'
 require './lib/computer'
 require 'pry'
@@ -250,11 +248,7 @@ class Game
   def firing_radius
     shot = @computer.recent_hit
     firing_radius = []
-    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr,
-                                                                                   shot.split(//)[1]].join << [
-                                                                                     shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s
-                                                                                   ].join << [shot.split(//)[0],
-                                                                                              (shot.split(//)[1].to_i - 1).to_s].join
+    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
     firing_radius.reject! { |element| @player.board.valid_coordinate?(element) == false }
     shot = firing_radius.shuffle!.shift
   end
@@ -262,7 +256,7 @@ class Game
   def computer_hits_reaction(shot)
     @computer.recent_hit = shot
     @computer.hunting = true
-    print_very_slow("\nNow I'm hunting you.\n", 0.08)
+    print_very_slow("\nNow I'm hunting you.....\n", 0.08)
     sleep 1
   end
 
@@ -294,7 +288,7 @@ class Game
   end
 
   def begin_the_hunt(shot)
-    print_very_slow("\nI can see you\n", 0.08)
+    print_very_slow("\nI can see you.....\n", 0.08)
     sleep 0.5
     @computer.recent_hit = shot
     @computer.hunting = true

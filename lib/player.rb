@@ -1,7 +1,6 @@
-require './lib/board'
-require './lib/cell'
-require './lib/ship'
 require './lib/game'
+require './lib/ship'
+require './lib/computer'
 require 'pry'
 
 class Player
