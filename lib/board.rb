@@ -46,9 +46,8 @@ class Board
   end
 
   def consecutive_coordinates?(coordinates)
-    letters = coordinates.map { |coordinate| coordinate.split('')[0] }
-    numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
-
+    letters = letter_array(coordinates)
+    numbers = number_array(coordinates)
     if letters.uniq.count == coordinates.count
       letters.each_cons(2).all? { |a, b| a.ord == b.ord - 1 }
     elsif numbers.uniq.count == coordinates.count
@@ -63,8 +62,8 @@ class Board
   end
 
   def not_diagonal(coordinates)
-    letters = coordinates.map { |coordinate| coordinate.split('')[0] }
-    numbers = coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
+    letters = letter_array(coordinates)
+    numbers = number_array(coordinates)
     if letters.uniq.count == 1 && numbers.uniq.count == coordinates.count
       true
     elsif numbers.uniq.count == 1 && letters.uniq.count == coordinates.count
@@ -72,6 +71,14 @@ class Board
     else
       false
     end
+  end
+
+  def letter_array(coordinates)
+    coordinates.map { |coordinate| coordinate.split('')[0] }
+  end
+
+  def number_array(coordinates)
+    coordinates.flat_map { |coordinate| coordinate.split('', 2)[1] }
   end
 
   # what's a good way to break this out into multiple methods? board_display being used as an accumulator makes it difficult to break up the nested enumerable.
