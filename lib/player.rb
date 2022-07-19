@@ -15,9 +15,9 @@ class Player
     # @ships = game.ships
   end
 
-  def print_very_slow(string)
+  def print_very_slow(string, time = 0.04)
     string.split(//).each do |character|
-      sleep 0.04
+      sleep time
       print character
     end
   end
@@ -30,7 +30,7 @@ class Player
         print "\nEnter the squares for the #{ship.name} (#{ship.length} spaces): "
         coordinates = gets.chomp.upcase.split(" ").sort
         if @board.valid_placement?(ship, coordinates) == false
-          print_very_slow("\nThat strategy is not ideal. Please try again.\n\n")
+          print "\nThat strategy is not ideal. Please try again.\n"
           print @board.render(true) + "\n"
         end
       end

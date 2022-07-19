@@ -26,9 +26,9 @@ class Game
     end
   end
 
-  def print_very_slow(string)
+  def print_very_slow(string, time = 0.04)
     string.split(//).each do |character|
-      sleep 0.04
+      sleep time
       print character
     end
   end
@@ -43,6 +43,7 @@ class Game
     print " " * 4 + "-" * 30 + "\n"
     print " " + "-" * 36
     print_very_slow(("\nWelcome to BATTLESHIP, Freedom Fighter\n"))
+    sleep 0.5
     print " " + "-" * 36 + "\n"
     print " " * 4 + "-" * 30 + "\n"
     print " " * 7 + "-" * 24 + "\n"
@@ -75,7 +76,7 @@ class Game
 
 
   def difficulty_select
-    print "\nPlease select difficulty (1. Easy, 2. Hard): "
+    print "\n\n\nPlease select difficulty (1. Easy, 2. Hard): "
     answer = gets.chomp.to_i
     if answer > 0 && answer < 3
       @difficulty = answer
@@ -95,7 +96,7 @@ class Game
   end
 
   def custom_columns
-    print "\nPlease select board width (between 4 and 10 cells): "
+    print "Please select board width (between 4 and 10 cells): "
     @columns = gets.chomp.to_i
     if @columns < 4 || @columns > 10
       print "Invalid width, please try again."
@@ -104,10 +105,10 @@ class Game
   end
 
   def custom_rows
-    print "\nPlease select board height (between 4 and 10 cells): "
+    print "Please select board height (between 4 and 10 cells): "
     @rows = gets.chomp.to_i
     if @rows < 4 || @rows > 10
-      print "\nInvalid height, please try again.\n"
+      print "Invalid height, please try again."
       custom_rows
     end
   end
@@ -118,24 +119,34 @@ class Game
   end
 
   def custom_ships_menu
-    print "\nWould you like to add another craft to the fleet? (y/n): "
+    print "Would you like to add another craft to the fleet? (y/n): "
     answer = gets.chomp
+    custom_ships_menu_options(answer)
+  end
+
+  def custom_ships_menu_options(answer)
     case answer
     when "y"
       custom_ships_entry
     when "n"
-      print_very_slow("\nWelding, riveting, articulating splines...\n")
+      comical_ellipses
     else
-      print_very_slow("\nInvalid input, please try again\n")
+      print_very_slow("Invalid input, please try again")
       custom_ships_menu
     end
   end
 
+  def comical_ellipses
+    print_very_slow("\n" * 5 + "\nWelding.....\n\n\n       Riveting.....\n\n\n\n\n  Reticulating splines...", 0.05)
+    print_very_slow("............", 0.08)
+    print_very_slow("... . . . . . . .\n", 0.1)
+  end
+
   def custom_ships_entry
-    print "\nEnter a name and length for your craft.\n"
+    print "\nEnter a name and length for your craft."
     print "\nName: "
     name = gets.chomp
-    print "\nLength (remember, ships must fit on the board): "
+    print "Length (remember, ships must fit on the board): "
     length = gets.chomp.to_i
     custom_ships_validation(name, length)
   end
@@ -152,8 +163,9 @@ class Game
   end
 
   def player_place_ships_dialog
-    print_very_slow("\nI have laid out my ships on the grid.\n" +
-    "\nYou now need to lay out your #{player.ships.size} ships.\n\n")
+    print_very_slow("\nI have carefully placed my mighty warships on the grid." +
+    "\nNow you need to lay out your, *impolite cough*, \"boats.\"\n\n")
+    sleep 1
   end
 
   def render_boards(state = false)
@@ -167,28 +179,30 @@ class Game
   def player_fire_feedback(shot)
     case @computer.board.cells[shot].render
     when "M"
-      "Negative contact! We can't see them!\n"
+      print_very_slow("\nNegative contact! We can't see them!\n")
+      sleep 0.5
     when "H"
-      "Contact! We're picking up distress signals!\n"
+      print_very_slow("\nContact! We're picking up distress signals!\n")
+      sleep 0.5
     when "X"
-      "Contact! Target sensors have gone dark! That's a kill.\n"
+      print_very_slow("\nContact! Target sensors have gone dark! Enemy boat sunk.\n")
+      sleep 0.5
     end
   end
 
   def player_fire
     print "\nEnter a coordinate to fire: "
     shot = gets.chomp.upcase
-    print "\n"
     if @computer.board.valid_coordinate?(shot) == true
       if @player_shot_selection.include?(shot) != true
         @computer.board.cells[shot].fire_upon
         @player_shot_selection << shot
-        print_very_slow(player_fire_feedback(shot) + "\n")
+        player_fire_feedback(shot)
       else
-        print "We've already fired on this coordinate. Choose another.\n"
+        print_very_slow("\nWe've already fired on this coordinate. Choose another.\n")
         player_fire
       end
-    else print "\nNo viable firing solution on this location. Try again!\n"
+    else print_very_slow("\nNo viable firing solution on this location. Try again!\n")
       player_fire
     end      
   end
@@ -196,35 +210,40 @@ class Game
   def computer_fire_feedback(shot)
     case @player.board.cells[shot].render
     when "M"
-      "They've fired back! It's a miss!\n"
+      print_very_slow("\nThey've fired back! It's a miss!\n")
+      sleep 0.5
     when "H"
-      "We're hit. We're taking on water!\n"
+      print_very_slow("\nWe're hit. We're taking on water!\n")
+      sleep 0.5
     when "X"
-      "We've lost the ship!\n"
+      print_very_slow("\nWe're hit again! We've lost the ship!\n")
+      sleep 0.5
     end
   end
 
   def computer_fire_easy
     shot = computer_shot_potentials.shuffle!.shift
     @player.board.cells[shot].fire_upon 
-    print_very_slow(computer_fire_feedback(shot) + "\n")
+    computer_fire_feedback(shot)
   end
   
   def computer_fire_hard
     if @computer.hunting == false
       shot = computer_shot_potentials.shuffle!.shift
       @player.board.cells[shot].fire_upon 
-      print_very_slow(computer_fire_feedback(shot) + "\n")
+      computer_fire_feedback(shot)
 
       if @player.board.cells[shot].render == "H"
         @computer.recent_hit = shot
         @computer.hunting = true
+        print_very_slow("\nNow I'm hunting you.\n", 0.08)
+        sleep 1
       end
 
     elsif @computer.hunting == true
       shot = firing_radius
       @player.board.cells[shot].fire_upon
-      print_very_slow(computer_fire_feedback(shot) + "\n")
+      computer_fire_feedback(shot)
       computer_hunting(shot)
     end
   end
@@ -232,15 +251,28 @@ class Game
   def computer_hunting(shot)
     case @player.board.cells[shot].render
     when "H"
+      begin_the_hunt(shot)
+    when "X"
+      not_hunting
+      print_very_slow("\nI've got you now!\n", 0.08)
+      sleep 0.5
+    when "M"
+      not_hunting
+      print_very_slow("\nNo! Where did you go?!\n", 0.08)
+      sleep 0.5
+    end
+  end
+
+  def begin_the_hunt(shot)
+    print_very_slow("\nI can see you\n", 0.08)
+    sleep 0.5
     @computer.recent_hit = shot
     @computer.hunting = true
-    when "X"
+  end
+
+  def not_hunting
     @computer.recent_hit = nil
     @computer.hunting = false
-    when "M"
-    @computer.recent_hit = nil
-    @computer.hunting = false
-    end
   end
 
   def run_game
@@ -257,7 +289,9 @@ class Game
   def play_game
     until computer_wins? || player_wins?
       render_boards
-      print_very_slow("Captain, we have an open shot!\n")
+      sleep 0.2
+      print_very_slow("\nCaptain, we have an open shot!\n", 0.04)
+      sleep 0.1
       player_fire
       end_game if self.player_wins? == true
       @difficulty == 1 ? computer_fire_easy : computer_fire_hard
@@ -275,10 +309,12 @@ class Game
   def end_game
     if player_wins?
       render_boards(true)
-      print "We have ended the Cold War!! \n\n\n\n"
+      print_very_slow("VICTORY! WE HAVE ENDED THE COLDEST WAR!!\n", 0.1)
+      sleep 2
     else
       render_boards(true)
-      print "The Iron Curtain has overcome! \n\n\n\n"
+      print_very_slow("DEFEAT! THE IRON CURTAIN WILL NEVER LIFT!!\n", 0.1)
+      sleep 2
     end
     game_reset    
   end
