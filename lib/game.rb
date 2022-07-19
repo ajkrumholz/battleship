@@ -1,8 +1,7 @@
 require './lib/board'
-require './lib/cell'
-require './lib/ship'
 require './lib/player'
 require './lib/computer'
+require 'ruby2d'
 require 'pry'
 
 class Game
@@ -30,15 +29,7 @@ class Game
     print ' ' * 4 + '-' * 30 + "\n"
     print ' ' + '-' * 36
     print_very_slow(("\nWelcome to BATTLESHIP, Freedom Fighter\n"))
-    sleep 0.5
-    print ' ' + '-' * 36 + "\n"
-    print ' ' * 4 + '-' * 30 + "\n"
-    print ' ' * 7 + '-' * 24 + "\n"
-    print ' ' * 10 + '-' * 18 + "\n"
-    print ' ' * 13 + '-' * 12 + "\n"
-    print ' ' * 16 + '-' * 6 + "\n"
-    print ' ' * 18 + '-' * 2 + "\n"
-    print "\n\n"
+    sleep 1
     run_game
   end
 
@@ -49,6 +40,7 @@ class Game
     @computer.place_ships
     player_place_ships_dialog
     @player.place_ships
+    cry_havoc
     play_game
     end_game
   end
@@ -73,7 +65,7 @@ class Game
   end
 
   def difficulty_select
-    print "\n\n\nPlease select difficulty (1. Easy, 2. Hard): "
+    print "\nPlease select difficulty (1. Easy, 2. Hard): "
     answer = gets.chomp.to_i
     if answer > 0 && answer < 3
       @difficulty = answer
@@ -116,7 +108,7 @@ class Game
   end
 
   def custom_ships_menu
-    print 'Would you like to add another craft to the fleet? (y/n): '
+    print "\nWould you like to add another craft to the fleet? (y/n): "
     answer = gets.chomp
     custom_ships_menu_options(answer)
   end
@@ -162,7 +154,8 @@ class Game
   def player_place_ships_dialog
     print_very_slow("\nI have carefully placed my mighty warships on the grid." +
     "\nNow you need to lay out your, *impolite cough*, \"boats.\"\n\n")
-    sleep 0.2
+    sleep 1
+    print "\n" * 20
   end
 
   def render_boards(state = false)
@@ -171,6 +164,12 @@ class Game
     print @computer.board.render(state)
     print "=============PLAYER BOARD=============\n"
     print @player.board.render(true) + "\n"
+  end
+
+  def cry_havoc
+    print "\n" * 30
+    print_very_slow("Cry havoc, and let slip the dogs of war.", 0.07)
+    sleep 1
   end
 
   def play_game
@@ -250,11 +249,7 @@ class Game
   def firing_radius
     shot = @computer.recent_hit
     firing_radius = []
-    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr,
-                                                                                   shot.split(//)[1]].join << [
-                                                                                     shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s
-                                                                                   ].join << [shot.split(//)[0],
-                                                                                              (shot.split(//)[1].to_i - 1).to_s].join
+    firing_radius << [(shot.split(//)[0].ord - 1).chr, shot.split(//)[1]].join << [(shot.split(//)[0].ord + 1).chr, shot.split(//)[1]].join << [shot.split(//)[0], (shot.split(//)[1].to_i + 1).to_s].join << [shot.split(//)[0], (shot.split(//)[1].to_i - 1).to_s].join
     firing_radius.reject! { |element| @player.board.valid_coordinate?(element) == false }
     firing_radius.reject! { |element| computer_shot_potentials.include?(element) == false}
     shot = firing_radius.shuffle!.shift
@@ -263,7 +258,7 @@ class Game
   def computer_hits_reaction(shot)
     @computer.recent_hit = shot
     @computer.hunting = true
-    print_very_slow("\nNow I'm hunting you.\n", 0.08)
+    print_very_slow("\nNow I'm hunting you.....\n", 0.08)
     sleep 1
   end
 
@@ -295,7 +290,7 @@ class Game
   end
 
   def begin_the_hunt(shot)
-    print_very_slow("\nI can see you\n", 0.08)
+    print_very_slow("\nI can see you.....\n", 0.08)
     sleep 0.5
     @computer.recent_hit = shot
     @computer.hunting = true
@@ -329,6 +324,8 @@ class Game
   end
 
   def end_game
+    menu_theme = Sound.new('menu_theme.mp3')
+    menu_theme.play
     if player_wins?
       render_boards(true)
       print_very_slow("VICTORY! WE HAVE ENDED THE COLDEST WAR!!\n", 0.1)

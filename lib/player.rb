@@ -1,7 +1,6 @@
-require './lib/board'
-require './lib/cell'
-require './lib/ship'
 require './lib/game'
+require './lib/ship'
+require './lib/computer'
 require 'pry'
 
 class Player
@@ -28,12 +27,14 @@ class Player
         print "\nEnter the squares for the #{ship.name} (#{ship.length} spaces): "
         coordinates = gets.chomp.upcase.split(' ').sort
         if @board.valid_placement?(ship, coordinates) == false
-          print "\nThat strategy is not ideal. Please try again.\n"
+          print_very_slow("\nThat strategy is not ideal. Please try again.\n\n")
+          sleep 0.3
+          print "\n" * 20
           print @board.render(true) + "\n"
         end
       end
       @board.place(ship, coordinates)
-      print "\n" + @board.render(true)
+      print "\n" * 20 + @board.render(true)
     end
   end
 end
